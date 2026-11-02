@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Complete ID Card Details{% endblock %}
+{% block page_heading %}Complete Employee ID Card Details{% endblock %}
+{% set vals = form_values if form_values is defined else {} %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">STEP 03 · COMPLETE DETAILS</span><h1>अतिरिक्त जानकारी और फोटो</h1><p>कार्ड जनरेट करने के लिए मोबाइल नंबर, वर्तमान स्टेशन और कर्मचारी का फोटो भरें।</p></div>
+<div class="form-layout"><section class="panel"><div class="panel-heading"><div><span class="step-tag">EMPLOYEE INFORMATION</span><h2>{{ employee.hrms_id }} · {{ employee.name }}</h2><p>PF No.: {{ employee.pf_no or 'Not available in HRMS' }}</p></div>{% if correction_mode %}<span class="status-pill status-warning">Correction Mode</span>{% else %}<span class="status-pill status-active">Verified</span>{% endif %}</div>
+<form method="post" action="{{ url_for('employee_submit') }}" enctype="multipart/form-data" class="form-stack"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="correction_mode" value="{{ '1' if correction_mode else '0' }}">
+<div class="form-grid two">
+<label>HRMS ID<input value="{{ employee.hrms_id }}" readonly class="input-readonly"></label>
+<label>PF No. / IPAS ID<input value="{{ employee.pf_no or 'Not available' }}" readonly class="input-readonly"></label>
+<label>Name {% if correction_mode %}<em class="required-note">Editable</em>{% endif %}<input name="name" value="{{ vals.get('name', employee.name) }}" {% if not correction_mode %}readonly class="input-readonly"{% endif %} required></label>
+<label>Designation {% if correction_mode %}<em class="required-note">Editable</em>{% endif %}<input name="designation" value="{{ vals.get('designation', employee.designation) }}" {% if not correction_mode %}readonly class="input-readonly"{% endif %} required></label>
+<label>Department {% if correction_mode %}<em class="required-note">Editable</em>{% endif %}<input name="department" value="{{ vals.get('department', employee.department) }}" {% if not correction_mode %}readonly class="input-readonly"{% endif %} required></label>
+<label>Mobile Number <em class="required-note">Required</em><input name="mobile" type="tel" inputmode="numeric" maxlength="15" value="{{ vals.get('mobile', '') }}" placeholder="10-digit mobile number" required></label>
+<label class="full-span">Current Working Station <em class="required-note">Required</em><input name="station" value="{{ vals.get('station', '') }}" placeholder="e.g. BRC / PRTN / ANND" required></label>
+</div>
+<div class="photo-upload-block"><div><strong>Employee Photograph</strong><small>Clear front-facing JPG/JPEG photo. सिस्टम इसे ID Card के लिए 100 KB तक compress करेगा।</small></div><label class="photo-drop"><input type="file" id="photo-input" name="photo" accept="image/jpeg,image/png,image/webp" required><span class="photo-placeholder" id="photo-placeholder">＋</span><img id="photo-preview" alt="Photo preview" hidden><span class="photo-copy"><b>Upload employee photo</b><small>Tap to select / use mobile camera</small></span></label></div>
+<div class="photo-upload-block"><div><strong>Employee Signature <em class="required-note">Optional</em></strong><small>कर्मचारी का हस्ताक्षर अपलोड करना वैकल्पिक है। JPG/PNG image स्वीकार होगी।</small></div><label class="photo-drop"><input type="file" name="employee_signature" accept="image/jpeg,image/png"><span class="photo-placeholder">✍</span><span class="photo-copy"><b>Upload employee signature</b><small>Optional · JPG / PNG</small></span></label></div>
+<div class="form-bottom"><span class="muted tiny">Submit के बाद Front और Back Preview देखकर Confirm करना होगा।</span><button type="submit" class="btn btn-primary">Submit Details & Open Preview →</button></div>
+</form></section>
+<aside class="form-aside"><div class="aside-number">03</div><h3>Final checks</h3><ul class="check-list"><li><span>✓</span> HRMS ID and PF No. fetched</li><li><span>✓</span> Name / Designation / Dept confirmed</li><li><span>○</span> Mobile number entered</li><li><span>○</span> Current station entered</li><li><span>○</span> Employee photo uploaded</li></ul><div class="notice notice-warning mini-notice">QR Code में HRMS ID, Name, Designation, Department, Station, PF No. और Mobile Number शामिल होंगे।</div></aside></div>
+{% endblock %}

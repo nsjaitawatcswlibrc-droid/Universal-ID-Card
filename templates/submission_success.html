@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}ID Card Generated{% endblock %}
+{% block page_heading %}ID Card Details Submitted{% endblock %}
+{% block content %}
+<div class="success-wrap"><div class="success-icon">✓</div><span class="eyebrow">DETAILS SUBMITTED</span><h1>Preview के लिए तैयार</h1><p>कर्मचारी का विवरण सेव हो गया है। Final PDF डाउनलोड करने से पहले Front और Back दोनों का Preview देखकर Confirm करें।</p><div class="success-ref"><span>REQUEST REFERENCE</span><strong>{{ card.request_ref }}</strong></div><div class="success-details"><div><span>HRMS ID</span><b>{{ card.hrms_id }}</b></div><div><span>Employee</span><b>{{ card.name }}</b></div><div><span>Department</span><b>{{ card.department }}</b></div></div><a class="btn btn-primary btn-download" href="{{ url_for('card_preview', card_id=card.id) }}">Preview Front & Back →</a><a class="text-link success-back" href="{{ url_for('department_dashboard') }}">← Return to Department Dashboard</a><div class="notice notice-info success-notice">PDF में कार्ड का Front और Back अलग-अलग पेज पर होगा। प्रिंटिंग के लिए दोनों पृष्ठों को कार्ड के दोनों तरफ प्रिंट करें।</div></div>
+{% endblock %}

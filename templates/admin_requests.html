@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Generated ID Cards{% endblock %}
+{% block page_heading %}Generated ID Cards{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">SUBMISSION REGISTER</span><h1>Generated ID Cards</h1><p>सभी विभागों द्वारा जमा किए गए ID Card आवेदन। PDF को दोबारा डाउनलोड किया जा सकता है।</p></div>
+<div class="table-wrap"><table><thead><tr><th>Request Ref.</th><th>HRMS ID</th><th>Employee</th><th>Department</th><th>Station</th><th>Mobile</th><th>Submitted By</th><th>Date</th><th>PDF</th></tr></thead><tbody>
+{% for item in requests_list %}<tr><td class="mono">{{ item.request_ref }}</td><td>{{ item.hrms_id }}</td><td><strong>{{ item.name }}</strong><small class="cell-sub">{{ item.designation }}</small></td><td>{{ item.department }}</td><td>{{ item.station }}</td><td>{{ item.mobile }}</td><td>{{ item.requested_by.username }}</td><td>{{ item.created_at.strftime('%d-%m-%Y %H:%M') }}</td><td><a class="table-action" href="{{ url_for('card_preview', card_id=item.id) }}">Preview</a></td></tr>{% else %}<tr><td colspan="9" class="empty-state">अभी तक कोई ID Card submit नहीं हुआ है।</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

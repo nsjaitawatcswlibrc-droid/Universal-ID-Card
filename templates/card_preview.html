@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}ID Card Preview{% endblock %}
+{% block page_heading %}Review ID Card Front & Back{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">FINAL REVIEW</span><h1>Preview ID Card</h1><p>दोनों साइड ध्यान से जाँचें। Confirm करने के बाद ही Final PDF Download सक्रिय होगा।</p></div>
+<div class="preview-grid">
+  <section class="panel"><div class="panel-heading"><div><span class="step-tag">SIDE 01</span><h2>Front Side</h2><p>Employee details, photograph and signatures</p></div></div><iframe class="card-pdf-preview" title="ID Card Front Preview" src="{{ url_for('card_preview_pdf', card_id=card.id) }}#page=1&toolbar=0&navpanes=0"></iframe></section>
+  <section class="panel"><div class="panel-heading"><div><span class="step-tag">SIDE 02</span><h2>Back Side</h2><p>Return instructions and QR code</p></div></div><iframe class="card-pdf-preview" title="ID Card Back Preview" src="{{ url_for('card_preview_pdf', card_id=card.id) }}#page=2&toolbar=0&navpanes=0"></iframe></section>
+</div>
+<div class="panel preview-confirm-panel">
+  <div><span class="step-tag">CONFIRMATION</span><h2>Are both sides correct?</h2><p>Confirm करने पर Final PDF Download की अनुमति मिल जाएगी।</p></div>
+  <form method="post" action="{{ url_for('confirm_card_preview', card_id=card.id) }}" class="preview-confirm-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="preview-check"><input type="checkbox" name="confirm_preview" value="yes" required> मैंने Front और Back दोनों Preview जाँच लिए हैं और PDF जारी करने की पुष्टि करता/करती हूँ।</label>
+    <button class="btn btn-primary" type="submit">Confirm Preview</button>
+  </form>
+  {% if card.id in session.get('confirmed_card_previews', []) %}
+    <a class="btn btn-primary btn-download" href="{{ url_for('download_card', card_id=card.id) }}">↓ Download Final ID Card PDF</a>
+  {% else %}
+    <button class="btn btn-secondary btn-download" type="button" disabled>Confirm करने के बाद Download उपलब्ध होगा</button>
+  {% endif %}
+</div>
+{% endblock %}

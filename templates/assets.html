@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Card & Logo Setup{% endblock %}
+{% block page_heading %}ID Card Template & Logo Setup{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">CARD DESIGN STUDIO</span><h1>ID Card Sample & Templates</h1><p>सैंपल, blank front/back design और logo यहाँ अपलोड करें। इन फाइलों का उपयोग कार्ड PDF बनाने में होगा।</p></div>
+<div class="notice notice-warning"><strong>ध्यान दें:</strong> आपके दिए गए मौजूदा कार्ड सैंपल में कर्मचारी की निजी जानकारी और फोटो है। उसे Public GitHub/Website folder में रखने के बजाय यहाँ Admin login के बाद Reference Sample के रूप में अपलोड करें।</div>
+<section class="panel" style="margin-bottom:18px">
+  <div class="panel-heading"><div><span class="step-tag">ISSUING AUTHORITY</span><h2>Authority Name & Designation</h2><p>यह विवरण Signature के नीचे Final ID Card पर दिखेगा।</p></div></div>
+  <form method="post" class="form-stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Authority Name<input name="authority_name" value="{{ authority_name }}" maxlength="180" placeholder="e.g. Senior Divisional Personnel Officer" required></label>
+    <label>Designation<input name="authority_designation" value="{{ authority_designation }}" maxlength="180" placeholder="e.g. Sr. DPO / Vadodara Division" required></label>
+    <button class="btn btn-primary" type="submit">Save Authority Details</button>
+  </form>
+</section>
+<div class="asset-grid">
+{% for key, label in asset_options.items() %}
+  <section class="panel asset-card"><div class="asset-top"><div><span class="step-tag">{{ '%02d'|format(loop.index) }} · ASSET</span><h2>{{ label }}</h2></div><span class="panel-icon">▧</span></div>
+    {% if assets.get(key) %}<div class="asset-preview {% if key in ['railway_logo','division_logo','authority_signature'] %}logo-preview{% endif %}"><img src="{{ url_for('admin_asset_preview', key=key) }}" alt="{{ label }}"></div><div class="asset-file"><span class="status-pill status-active">Uploaded</span><small>{{ assets[key].filename }}</small></div>
+    <form method="post" action="{{ url_for('delete_asset', key=key) }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="text-danger" type="submit" onclick="return confirm('क्या यह asset हटाना है?')">Remove file</button></form>
+    {% else %}<div class="asset-empty"><span>＋</span><strong>Not uploaded yet</strong><small>इस प्रकार की फाइल अभी उपलब्ध नहीं है।</small></div>{% endif %}
+    <form method="post" enctype="multipart/form-data" class="asset-upload-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="asset_key" value="{{ key }}"><label class="file-picker"><input type="file" name="asset_file" accept="image/png,image/jpeg" required><span>Choose image (JPG / PNG)</span></label><button class="btn btn-secondary btn-small" type="submit">{{ 'Replace' if assets.get(key) else 'Upload' }}</button></form>
+    {% if key == 'reference_sample' %}<p class="asset-help">केवल Admin reference/preview के लिए। यह ID PDF का background नहीं बनेगा।</p>{% elif key in ['front_template','back_template'] %}<p class="asset-help">साफ़ blank template अपलोड करें। कार्ड का dynamic text/photo इसके ऊपर रखा जाएगा।</p>{% elif key == 'authority_signature' %}<p class="asset-help">यह signature Front side पर Authority Name और Designation के ऊपर दिखाई देगा।</p>{% else %}<p class="asset-help">Uploaded logo कार्ड के front side के header में लगाया जाएगा।</p>{% endif %}
+  </section>
+{% endfor %}
+</div>
+<div class="notice notice-info">यदि आप blank Front/Back template अपलोड नहीं करते हैं, तो सिस्टम सैंपल के अनुपात के अनुसार अपना standard card layout बनाएगा। Uploaded blank template में text और photo की जगह खाली रखनी होगी।</div>
+{% endblock %}

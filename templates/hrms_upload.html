@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}HRMS Data Upload{% endblock %}
+{% block page_heading %}HRMS Data Upload{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">SOURCE DATABASE</span><h1>HRMS Data Upload</h1><p>Excel फाइल अपलोड करके कर्मचारी मास्टर डेटाबेस अपडेट करें।</p></div>
+<div class="two-col-layout">
+  <section class="panel"><div class="panel-heading"><div><span class="step-tag">01 · IMPORT</span><h2>Upload HRMS Excel</h2><p>वर्तमान रिकॉर्ड: <strong>{{ '{:,}'.format(employee_count) }}</strong></p></div><span class="panel-icon">⇧</span></div>
+    <form method="post" enctype="multipart/form-data" class="form-stack"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label class="upload-zone"><input type="file" name="hrms_file" accept=".xlsx,.xlsm" required><span class="upload-symbol">⇧</span><strong>Excel फाइल चुनें</strong><small>.xlsx या .xlsm · अधिकतम 12 MB</small><em id="hrms-file-name">No file selected</em></label><button type="submit" class="btn btn-primary btn-full">Import HRMS Records →</button></form>
+  </section>
+  <section class="panel pale-panel"><span class="eyebrow">EXPECTED COLUMNS</span><h2>आपकी HRMS फाइल के अनुसार</h2><p class="muted">सिस्टम header row स्वतः पहचानता है। शीर्षक वाली पहली row होने पर भी HRMS column header खोजा जाएगा।</p><div class="field-map"><div><span>HRMS ID</span><b>Employee Key</b></div><div><span>Name</span><b>Employee Name</b></div><div><span>Designation</span><b>Post / Designation</b></div><div><span>Department</span><b>Department Name</b></div><div><span>IPAS ID</span><b>PF No. on Card</b></div><div><span>Railway Unit</span><b>Unit Reference</b></div></div><div class="notice notice-info">नया रिकॉर्ड जोड़ने के साथ पहले से मौजूद HRMS ID का डेटा अपडेट होगा। पहले से बने ID Card आवेदन की जानकारी अपने समय के अनुसार सुरक्षित रहेगी।</div></section>
+</div>
+{% endblock %}

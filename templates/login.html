@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Login · Railway ID Card Portal{% endblock %}
+{% block public_content %}
+<div class="login-screen">
+  <div class="login-art">
+    <div class="login-brand"><span class="brand-mark large">WR</span><div><strong>WESTERN RAILWAY</strong><small>VADODARA DIVISION</small></div></div>
+    <div class="login-art-copy"><span class="eyebrow">PERSONNEL DEPARTMENT</span><h1>Employee Identity<br><em>Card Portal</em></h1><p>HRMS आधारित कर्मचारी पहचान पत्र निर्माण प्रणाली</p><div class="art-line"></div><div class="art-stats"><div><strong>01</strong><span>HRMS Lookup</span></div><div><strong>02</strong><span>Verify Details</span></div><div><strong>03</strong><span>Download PDF</span></div></div></div>
+    <div class="login-art-foot">Secure · Department-wise Access · Digital QR Verification</div>
+  </div>
+  <div class="login-panel"><div class="login-card"><div class="mobile-brand"><span class="brand-mark">WR</span><div><b>Western Railway</b><small>Vadodara Division</small></div></div><span class="eyebrow">WELCOME BACK</span><h2>Sign in to your account</h2><p class="muted">अपने Admin या Department Login ID से लॉगिन करें।</p>
+    <form method="post" class="form-stack"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Login ID<input name="username" autocomplete="username" required placeholder="Enter your Login ID"></label><label>Password<div class="password-wrap"><input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="Enter your password"><button type="button" class="show-pass" onclick="togglePassword('login-password')">Show</button></div></label><button class="btn btn-primary btn-full" type="submit">Login to Portal <span>→</span></button></form>
+    <div class="login-note"><span class="lock-dot">●</span> अधिकृत विभागीय उपयोग के लिए</div><div class="login-help">Login access केवल Admin द्वारा बनाया जाता है।</div>
+  </div></div>
+</div>
+{% endblock %}

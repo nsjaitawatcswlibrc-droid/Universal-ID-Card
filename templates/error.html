@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}{{ code }} · Railway ID Card Portal{% endblock %}
+{% block page_heading %}Request Error{% endblock %}
+{% block content %}<div class="empty-page"><span class="error-code">{{ code }}</span><h1>कुछ ठीक नहीं हुआ</h1><p>{{ message }}</p><a class="btn btn-primary" href="{{ url_for('index') }}">Go to Dashboard</a></div>{% endblock %}

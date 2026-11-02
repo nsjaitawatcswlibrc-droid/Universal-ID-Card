@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_heading %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="page-intro intro-row"><div><span class="eyebrow">CONTROL CENTRE</span><h1>नमस्कार, Administrator</h1><p>यहाँ से HRMS डेटा, विभागीय लॉगिन और ID Card प्रक्रिया नियंत्रित करें।</p></div><a href="{{ url_for('hrms_upload') }}" class="btn btn-primary">⇧ Upload HRMS Data</a></div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-icon blue">▣</div><div><span>Total HRMS Records</span><strong>{{ '{:,}'.format(total_employees) }}</strong><small>Backend employee database</small></div></div>
+  <div class="stat-card"><div class="stat-icon violet">▥</div><div><span>Departments</span><strong>{{ total_departments }}</strong><small>Found in HRMS source</small></div></div>
+  <div class="stat-card"><div class="stat-icon amber">♙</div><div><span>Department Logins</span><strong>{{ total_users }}</strong><small>Created by Administrator</small></div></div>
+  <div class="stat-card"><div class="stat-icon green">▤</div><div><span>ID Cards Submitted</span><strong>{{ total_cards }}</strong><small>PDF generation requests</small></div></div>
+</div>
+<div class="section-heading"><div><h2>Quick Actions</h2><p>मुख्य कार्यों तक सीधे पहुँचें।</p></div></div>
+<div class="quick-grid">
+  <a class="quick-card" href="{{ url_for('departments') }}"><span class="quick-icon">♙</span><div><strong>Create Department Login</strong><small>विभागवार Login ID और Password बनाएँ</small></div><b>→</b></a>
+  <a class="quick-card" href="{{ url_for('hrms_upload') }}"><span class="quick-icon">⇧</span><div><strong>Upload HRMS Database</strong><small>Excel source से कर्मचारी रिकॉर्ड अपडेट करें</small></div><b>→</b></a>
+  <a class="quick-card" href="{{ url_for('admin_assets') }}"><span class="quick-icon">▧</span><div><strong>Card Template & Logos</strong><small>Blank card, sample और logos अपलोड करें</small></div><b>→</b></a>
+</div>
+<div class="section-heading"><div><h2>Recent ID Card Submissions</h2><p>हाल ही में जनरेट किए गए कार्ड।</p></div><a class="text-link" href="{{ url_for('admin_requests') }}">View all →</a></div>
+<div class="table-wrap"><table><thead><tr><th>Request ID</th><th>HRMS ID</th><th>Employee</th><th>Department</th><th>Submitted By</th><th>Date</th><th>PDF</th></tr></thead><tbody>
+{% for item in recent %}<tr><td><span class="mono">{{ item.request_ref }}</span></td><td>{{ item.hrms_id }}</td><td><strong>{{ item.name }}</strong><small class="cell-sub">{{ item.designation }}</small></td><td>{{ item.department }}</td><td>{{ item.requested_by.username }}</td><td>{{ item.created_at.strftime('%d-%m-%Y') }}</td><td><a class="table-action" href="{{ url_for('card_preview', card_id=item.id) }}">Preview</a></td></tr>{% else %}<tr><td colspan="7" class="empty-state">अभी तक कोई ID Card submit नहीं हुआ है।</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

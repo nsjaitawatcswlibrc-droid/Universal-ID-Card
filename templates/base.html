@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Railway ID Card Portal{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if current_user %}
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="{{ url_for('admin_dashboard') if current_user.role == 'admin' else url_for('department_dashboard') }}">
+      <span class="brand-mark">WR</span>
+      <span><strong>Railway ID</strong><small>Vadodara Division</small></span>
+    </a>
+    <div class="sidebar-label">WORKSPACE</div>
+    {% if current_user.role == 'admin' %}
+      <a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}"><span>▦</span> Dashboard</a>
+      <a class="nav-link {% if request.endpoint == 'departments' %}active{% endif %}" href="{{ url_for('departments') }}"><span>♙</span> Department Logins</a>
+      <a class="nav-link {% if request.endpoint == 'hrms_upload' %}active{% endif %}" href="{{ url_for('hrms_upload') }}"><span>⇧</span> HRMS Data Upload</a>
+      <a class="nav-link {% if request.endpoint == 'admin_assets' %}active{% endif %}" href="{{ url_for('admin_assets') }}"><span>▧</span> Card & Logo Setup</a>
+      <a class="nav-link {% if request.endpoint == 'admin_requests' %}active{% endif %}" href="{{ url_for('admin_requests') }}"><span>▤</span> Generated ID Cards</a>
+    {% else %}
+      <a class="nav-link {% if request.endpoint == 'department_dashboard' %}active{% endif %}" href="{{ url_for('department_dashboard') }}"><span>▦</span> Dashboard</a>
+    {% endif %}
+    <div class="sidebar-bottom">
+      <div class="user-mini"><span class="avatar">{{ current_user.username[:1].upper() }}</span><span><strong>{{ current_user.username }}</strong><small>{{ 'Administrator' if current_user.role == 'admin' else current_user.department }}</small></span></div>
+      <a class="nav-link" href="{{ url_for('change_password') }}"><span>⚙</span> Change Password</a>
+      <a class="nav-link logout" href="{{ url_for('logout') }}"><span>↪</span> Logout</a>
+    </div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><button class="mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div><span class="topbar-kicker">WESTERN RAILWAY / PERSONNEL</span><strong>{% block page_heading %}ID Card Management{% endblock %}</strong></div><span class="topbar-pill">{{ 'ADMIN' if current_user.role == 'admin' else 'DEPARTMENT USER' }}</span></header>
+    <div class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}"><span>{{ message }}</span><button onclick="this.parentElement.remove()">×</button></div>{% endfor %}</div>{% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+    <footer class="footer">Western Railway · Vadodara Division <span>Railway Employee Identity Card System</span></footer>
+  </main>
+</div>
+{% else %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="login-flashes">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block public_content %}{% endblock %}
+{% endif %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

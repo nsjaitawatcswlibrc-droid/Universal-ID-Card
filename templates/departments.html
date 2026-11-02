@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Department Logins{% endblock %}
+{% block page_heading %}Department Login Management{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">ACCESS MANAGEMENT</span><h1>Department-wise Login IDs</h1><p>हर विभाग के लिए अलग Login ID और Password बनाएँ। Department user केवल अपने विभाग के HRMS कर्मचारियों के कार्ड बना सकेगा।</p></div>
+<div class="two-col-layout align-start">
+<section class="panel"><div class="panel-heading"><div><span class="step-tag">CREATE ACCESS</span><h2>नया Department Login</h2><p>विभाग और Login credentials निर्धारित करें।</p></div><span class="panel-icon">＋</span></div>
+<form method="post" class="form-stack"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Department<select name="department" required><option value="">Select Department</option>{% for name in department_names %}<option value="{{ name }}">{{ name }}</option>{% endfor %}</select><small>Department सूची HRMS data से आती है। HRMS में विभाग न मिले तो पहले data update करें।</small></label><label>Login ID<input name="username" required minlength="3" placeholder="e.g. mech_brc"></label><label>Temporary Password<input type="password" name="password" required minlength="10" placeholder="At least 10 characters"><small>पहले लॉगिन पर यूजर को पासवर्ड बदलना होगा।</small></label><button class="btn btn-primary" type="submit">Create Department Login →</button></form>
+</section>
+<section class="panel"><div class="panel-heading"><div><span class="step-tag">CURRENT ACCESS</span><h2>Existing Department Logins</h2><p>{{ users|length }} account(s)</p></div></div><div class="account-list">{% for user in users %}<div class="account-row"><span class="avatar">{{ user.department[:1].upper() }}</span><div class="account-details"><strong>{{ user.department }}</strong><small>{{ user.username }}</small></div><span class="status-pill {{ 'status-active' if user.is_active else 'status-off' }}">{{ 'Active' if user.is_active else 'Disabled' }}</span><form method="post" action="{{ url_for('toggle_user', user_id=user.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="icon-button" title="Enable / Disable" type="submit">{{ 'Ⅱ' if user.is_active else '▶' }}</button></form></div>{% else %}<div class="empty-state">अभी कोई विभागीय Login ID नहीं बनाया गया है।</div>{% endfor %}</div></section>
+</div>
+{% endblock %}
